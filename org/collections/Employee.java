@@ -69,46 +69,51 @@ public class Employee {
 
     public static void main(String[] args) {
         ArrayList<Employee> employeeList = new ArrayList<Employee>() ;
-        employeeList.add(new Employee("01", "Alina Smith", "HR", 4000, new Date(2020, 4, 15), 36));
-        employeeList.add(new Employee("02", "Bob John", "IT", 60000, new Date(2019, 8, 23), 35));
-        employeeList.add(new Employee("03", "Charlie Brown", "Finance", 55000, new Date(2021, 1, 10), 28));
-        employeeList.add(new Employee("04", "Popov Ana", "Marketing", 65000, new Date(2018, 11, 5), 40));
-        employeeList.add(new Employee("05", "Emma Frank", "IT", 70000, new Date(2020, 7, 19), 32));
-        employeeList.add(new Employee("06", "Millie Bobby", "Sales", 45000, new Date(2022, 3, 14), 29));
-        employeeList.add(new Employee("07", "Peaky Blinders", "HR", 52000, new Date(2019, 6, 29), 34));
-        employeeList.add(new Employee("08", "Smith Christina", "Sales", 50000, new Date(2022, 4, 15), 28));
+        employeeList.add(new Employee("01", "Alina Smith", "HR", 4000, new Date(120, 4, 15), 36));
+        employeeList.add(new Employee("02", "Bob John", "IT", 60000, new Date(119, 8, 23), 35));
+        employeeList.add(new Employee("03", "Charlie Brown", "Finance", 55000, new Date(121, 1, 10), 28));
+        employeeList.add(new Employee("04", "Popov Ana", "Marketing", 65000, new Date(118, 11, 5), 40));
+        employeeList.add(new Employee("05", "Emma Frank", "IT", 70000, new Date(120, 7, 19), 32));
+        employeeList.add(new Employee("06", "Millie Bobby", "Sales", 45000, new Date(122, 3, 14), 29));
+        employeeList.add(new Employee("07", "Peaky Blinders", "HR", 52000, new Date(119, 6, 29), 34));
+        employeeList.add(new Employee("08", "Smith Christina", "Sales", 50000, new Date(122, 4, 15), 28));
 
-        //(1)
+        //(ex.1)
         int maxSalaryIT = getMaxSalaryForDepartment(employeeList, "IT");
-        System.out.println("Max salary in IT department: " + maxSalaryIT);
+        System.out.println("Ex1. Max salary in IT department: " + maxSalaryIT);
         System.out.println("-------------------");
-        //(2)
+        //(ex.2)
         double avgSalaryHR = getAverageSalaryForDepartment(employeeList, "HR");
-        System.out.println ("Average salary in HR department: " + avgSalaryHR);
+        System.out.println ("Ex2. Average salary in HR department: " + avgSalaryHR);
         System.out.println("-------------------");
-        //(3)
+        //(ex.3)
         int numberOfEmployeeSales = getNumberOfEmployees(employeeList,"Sales");
-        System.out.println("Number of Employees in Sales: " + numberOfEmployeeSales);
+        System.out.println("Ex3. Number of Employees in Sales: " + numberOfEmployeeSales);
         System.out.println("-------------------");
-        //(4)
+        //(ex.4)
         int numberOfEmployeeExceptIT = getNumberOfEmployeeExceptIT(employeeList, "IT");
-        System.out.println("Number of Employees except IT department: " + numberOfEmployeeExceptIT);
+        System.out.println("Ex4. Number of Employees except IT department: " + numberOfEmployeeExceptIT);
         System.out.println("-------------------");
-        //5)
-        System.out.println("Group by Job Department: " + groupByJobDepartment(employeeList));
+        //(ex.5)
+        System.out.println("Ex5. Group by Job Department: " + groupByJobDepartment(employeeList));
         System.out.println("-------------------");
-        //(8)
+        //(ex.6)
+        printEmployeesJoinedAfter2020WithSalaryAbove1000(employeeList);
+        System.out.println("-------------------");
+        //(ex.7)
+
+        //(ex.8)
         int sumOfAllEmployees = calculateSumOfAllSalary(employeeList);
-        System.out.println("Sum of all Salaries: " + sumOfAllEmployees);
+        System.out.println("Ex8. Sum of all Salaries: " + sumOfAllEmployees);
         System.out.println("-------------------");
-        //(9)
+        //(ex.9)
         Map<String, List<String>> salariesPerDepartment = returnAllSalaryPerDepartment(employeeList);
-        System.out.println("Display all salaries per Department:");
+        System.out.println("Ex9. Display all salaries per Department:");
         salariesPerDepartment.forEach((department, salaries) ->
         System.out.println("Department: " + department + "," + salaries));
 
     }
-    //(1)
+    //(ex.1)
     public static int getMaxSalaryForDepartment(ArrayList<Employee> employees, String department) {
         int maxSalary = 0;
         for (Employee i : employees) {
@@ -120,7 +125,7 @@ public class Employee {
         }
         return maxSalary;
     }
-    //(2)
+    //(ex.2)
     public static double getAverageSalaryForDepartment(ArrayList<Employee> employees, String department) {
         int totalSalary = 0;
         int count = 0;
@@ -135,7 +140,7 @@ public class Employee {
         }
         return totalSalary / count;
     }
-    //(3)
+    //(ex.3)
     public static int getNumberOfEmployees(ArrayList<Employee> employees, String department) {
         int count = 0;
         for (Employee i : employees) {
@@ -145,7 +150,7 @@ public class Employee {
         }
         return count;
     }
-    //(4)
+    //(ex.4)
     public static int getNumberOfEmployeeExceptIT(ArrayList<Employee> employees, String exceptDepartment) {
         int totalEmployee = 0;
         String department;
@@ -157,29 +162,23 @@ public class Employee {
         }
         return totalEmployee;
     }
-    //(5)
-//    public Map<String, ArrayList<Employee>> groupByJobDepartment(ArrayList<Employee> employeeList) {
-//        Map<String, ArrayList<Employee>> resultMap = new HashMap<>();
-//        for (int i = 0; i < employeeList.size(); i++) {
-//            Employee employee = employeeList.get(i);
-//            List<Employee> employeeSubList = resultMap.getOrDefault(employee.getDepartment(), new ArrayList<Employee>());
-//            employeeSubList.add(employee);
-//            resultMap.put(employee.getDepartment (), (ArrayList<Employee>) employeeSubList);
-//        }
-//        return resultMap;
-//    }
+    //(ex.5)
     public static Map<String, List<Employee>> groupByJobDepartment(List<Employee> employeeList) {
         return employeeList.stream()
                 .collect(Collectors.groupingBy(Employee::getDepartment));
     }
-    //(7)
-//    public static Date printEmployeesJoinedAfter2020 (List<Employee> employeeList) {
-//        return employeeList.stream()
-//                .filter(e -> e.joinDate.after(2020-01-01))
-//                .collect(Collectors.toList());
-//    }
+    //(ex.6)
+    public static void printEmployeesJoinedAfter2020WithSalaryAbove1000(List<Employee> employeeList) {
+        Date dateAfter = new Date(120, 0, 1);
+        for (Employee employee : employeeList) {
+            if (employee.getJoinDate().after(dateAfter) && employee.getSalary() > 1000) {
+                System.out.println(employee);
+            }
+        }
+    }
+    //(ex.7)
 
-    //(8)
+    //(ex.8)
     public static int calculateSumOfAllSalary(ArrayList<Employee> employeeList) {
         int sum = 0;
         for (Employee i : employeeList) {
@@ -187,7 +186,7 @@ public class Employee {
         }
         return sum;
     }
-    //(9)
+    //(ex.9)
     public static Map<String, List<String>> returnAllSalaryPerDepartment(ArrayList<Employee> employeeList) {
         Map<String, List<String>> resultMap = new HashMap<>();
         for (Employee i : employeeList) {
