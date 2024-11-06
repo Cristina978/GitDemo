@@ -98,6 +98,7 @@ public class Employee {
         System.out.println("Ex5. Group by Job Department: " + groupByJobDepartment(employeeList));
         System.out.println("-------------------");
         //(ex.6)
+        System.out.println("Ex6.");
         printEmployeesJoinedAfter2020WithSalaryAbove1000(employeeList);
         System.out.println("-------------------");
         //(ex.7)
@@ -177,7 +178,9 @@ public class Employee {
         }
     }
     //(ex.7)
-
+    public static void returnLast3Emplyees(List<Employee> employeeList) {
+        Date dateAfter = new Date();
+    }
     //(ex.8)
     public static int calculateSumOfAllSalary(ArrayList<Employee> employeeList) {
         int sum = 0;
