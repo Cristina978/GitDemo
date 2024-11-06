@@ -102,7 +102,10 @@ public class Employee {
         printEmployeesJoinedAfter2020WithSalaryAbove1000(employeeList);
         System.out.println("-------------------");
         //(ex.7)
-
+        System.out.println("Ex7.");
+        Map<String, Integer> result = getLast3Employees(employeeList);
+        result.forEach((name, age) -> System.out.println(name + " : " + age));
+        System.out.println("-------------------");
         //(ex.8)
         int sumOfAllEmployees = calculateSumOfAllSalary(employeeList);
         System.out.println("Ex8. Sum of all Salaries: " + sumOfAllEmployees);
@@ -178,8 +181,26 @@ public class Employee {
         }
     }
     //(ex.7)
-    public static void returnLast3Emplyees(List<Employee> employeeList) {
-        Date dateAfter = new Date();
+    public static Map<String, Integer> getLast3Employees(List<Employee> employees) {
+        List<Employee> sortedEmployees = employees.stream()
+                .sorted((e1, e2) -> e2.getJoinDate().compareTo(e1.getJoinDate()))
+                .collect(Collectors.toList());
+
+        List<Employee> getLastThree = sortedEmployees.stream().limit(3).collect(Collectors.toList());
+
+        Map<String, Integer> employeeMap = new LinkedHashMap<>();
+        for (Employee emp : getLastThree) {
+            employeeMap.put(emp.getName(), emp.getAge());
+        }
+        return employeeMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
     }
     //(ex.8)
     public static int calculateSumOfAllSalary(ArrayList<Employee> employeeList) {
