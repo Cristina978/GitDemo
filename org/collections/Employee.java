@@ -83,8 +83,8 @@ public class Employee {
         System.out.println("Ex1. Max salary in IT department: " + maxSalaryIT);
         System.out.println("-------------------");
         //(ex.2)
-        double avgSalaryHR = getAverageSalaryForDepartment(employeeList, "HR");
-        System.out.println ("Ex2. Average salary in HR department: " + avgSalaryHR);
+        OptionalDouble avgSalaryHR = getAverageSalaryForDepartment(employeeList, "HR");
+        System.out.println ("Ex2. Average salary in HR department: " + avgSalaryHR.getAsDouble());
         System.out.println("-------------------");
         //(ex.3)
         int numberOfEmployeeSales = getNumberOfEmployees(employeeList,"Sales");
@@ -119,30 +119,28 @@ public class Employee {
     }
     //(ex.1)
     public static int getMaxSalaryForDepartment(ArrayList<Employee> employees, String department) {
-        int maxSalary = 0;
-        for (Employee i : employees) {
-            if (i.getDepartment() == department) {
-                if (i.getSalary() > maxSalary) {
-                    maxSalary = i.getSalary();
-                }
-            }
-        }
-        return maxSalary;
+        return employees.stream()
+                .filter(i -> i.getDepartment().equals(department))
+                .map(Employee::getSalary).max((Integer::compareTo)).get();
     }
     //(ex.2)
-    public static double getAverageSalaryForDepartment(ArrayList<Employee> employees, String department) {
-        int totalSalary = 0;
-        int count = 0;
-
-        for (Employee i : employees) {
-            if (i.getDepartment() == department) {
-                count ++;
-                if (i.getSalary() > totalSalary) {
-                    totalSalary = totalSalary + i.getSalary();
-                }
-            }
-        }
-        return totalSalary / count;
+    public static OptionalDouble getAverageSalaryForDepartment(ArrayList<Employee> employees, String department) {
+        return employees.stream()
+                .filter(i -> i.getDepartment().equals(department))
+                .mapToInt(Employee::getSalary)
+                .average();
+//        int totalSalary = 0;
+//        int count = 0;
+//
+//        for (Employee i : employees) {
+//            if (i.getDepartment() == department) {
+//                count ++;
+//                if (i.getSalary() > totalSalary) {
+//                    totalSalary = totalSalary + i.getSalary();
+//                }
+//            }
+//        }
+//        return totalSalary / count;
     }
     //(ex.3)
     public static int getNumberOfEmployees(ArrayList<Employee> employees, String department) {
