@@ -1,6 +1,8 @@
 package org.collections;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Employee {
@@ -68,15 +70,18 @@ public class Employee {
     }
 
     public static void main(String[] args) {
+        try{
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         ArrayList<Employee> employeeList = new ArrayList<Employee>() ;
-        employeeList.add(new Employee("01", "Alina Smith", "HR", 4000, new Date(120, 4, 15), 36));
-        employeeList.add(new Employee("02", "Bob John", "IT", 60000, new Date(119, 8, 23), 35));
-        employeeList.add(new Employee("03", "Charlie Brown", "Finance", 55000, new Date(121, 1, 10), 28));
-        employeeList.add(new Employee("04", "Popov Ana", "Marketing", 65000, new Date(118, 11, 5), 40));
-        employeeList.add(new Employee("05", "Emma Frank", "IT", 70000, new Date(120, 7, 19), 32));
-        employeeList.add(new Employee("06", "Millie Bobby", "Sales", 45000, new Date(122, 3, 14), 29));
-        employeeList.add(new Employee("07", "Peaky Blinders", "HR", 52000, new Date(119, 6, 29), 34));
-        employeeList.add(new Employee("08", "Smith Christina", "Sales", 50000, new Date(122, 4, 15), 28));
+        employeeList.add(new Employee("01", "Alina Smith", "HR", 4000, sdf.parse("2020-04-15"), 36));
+        employeeList.add(new Employee("02", "Bob John", "IT", 60000, sdf.parse("2019-08-23"), 35));
+        employeeList.add(new Employee("03", "Charlie Brown", "Finance", 55000, sdf.parse("2021-01-10"), 28));
+        employeeList.add(new Employee("04", "Popov Ana", "Marketing", 65000, sdf.parse("2018-11-05"), 40));
+        employeeList.add(new Employee("05", "Emma Frank", "IT", 500, sdf.parse("2020-07-19"), 32));
+        employeeList.add(new Employee("06", "Millie Bobby", "Sales", 45000, sdf.parse("2022-03-14"), 29));
+        employeeList.add(new Employee("07", "Peaky Blinders", "HR", 52000, sdf.parse("2019-06-29"), 34));
+        employeeList.add(new Employee("08", "Smith Christina", "Sales", 50000, sdf.parse("2022-04-15"), 28));
 
         //(ex.1)
         int maxSalaryIT = getMaxSalaryForDepartment(employeeList, "IT");
@@ -87,11 +92,11 @@ public class Employee {
         System.out.println ("Ex2. Average salary in HR department: " + avgSalaryHR.getAsDouble());
         System.out.println("-------------------");
         //(ex.3)
-        int numberOfEmployeeSales = getNumberOfEmployees(employeeList,"Sales");
+        long numberOfEmployeeSales = getNumberOfEmployees(employeeList,"Sales");
         System.out.println("Ex3. Number of Employees in Sales: " + numberOfEmployeeSales);
         System.out.println("-------------------");
         //(ex.4)
-        int numberOfEmployeeExceptIT = getNumberOfEmployeeExceptIT(employeeList, "IT");
+        Long numberOfEmployeeExceptIT = getNumberOfEmployeeExceptIT(employeeList, excludeDepartment -> excludeDepartment.equals("IT"));
         System.out.println("Ex4. Number of Employees except IT department: " + numberOfEmployeeExceptIT);
         System.out.println("-------------------");
         //(ex.5)
@@ -99,7 +104,10 @@ public class Employee {
         System.out.println("-------------------");
         //(ex.6)
         System.out.println("Ex6.");
-        printEmployeesJoinedAfter2020WithSalaryAbove1000(employeeList);
+        List<Employee> filteredEmployees = printEmployeesJoinedAfter2020WithSalaryAbove1000(employeeList, sdf.parse("2020-01-01"), 1000);
+        filteredEmployees.forEach(employee -> {
+            System.out.println("Name: " + employee.getName() + ", Join Date: " + employee.getJoinDate() + ", Salary: " + employee.getSalary());
+        });
         System.out.println("-------------------");
         //(ex.7)
         System.out.println("Ex7.");
@@ -116,6 +124,9 @@ public class Employee {
         salariesPerDepartment.forEach((department, salaries) ->
         System.out.println("Department: " + department + "," + salaries));
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     //(ex.1)
     public static int getMaxSalaryForDepartment(ArrayList<Employee> employees, String department) {
@@ -129,40 +140,18 @@ public class Employee {
                 .filter(i -> i.getDepartment().equals(department))
                 .mapToInt(Employee::getSalary)
                 .average();
-//        int totalSalary = 0;
-//        int count = 0;
-//
-//        for (Employee i : employees) {
-//            if (i.getDepartment() == department) {
-//                count ++;
-//                if (i.getSalary() > totalSalary) {
-//                    totalSalary = totalSalary + i.getSalary();
-//                }
-//            }
-//        }
-//        return totalSalary / count;
     }
     //(ex.3)
-    public static int getNumberOfEmployees(ArrayList<Employee> employees, String department) {
-        int count = 0;
-        for (Employee i : employees) {
-            if(i.getDepartment() == department) {
-                count ++;
-            }
-        }
-        return count;
+    public static long getNumberOfEmployees(ArrayList<Employee> employees, String department) {
+        return employees.stream()
+                .filter(i -> i.getDepartment().equals(department))
+                .count();
     }
     //(ex.4)
-    public static int getNumberOfEmployeeExceptIT(ArrayList<Employee> employees, String exceptDepartment) {
-        int totalEmployee = 0;
-        String department;
-        for (Employee i : employees) {
-            department = i.getDepartment();
-            if(!"IT".equalsIgnoreCase(department) && !exceptDepartment.equalsIgnoreCase(department)) {
-                totalEmployee++;
-            }
-        }
-        return totalEmployee;
+    public static long getNumberOfEmployeeExceptIT(ArrayList<Employee> employees, Predicate<String> exceptDepartment) {
+        return employees.stream()
+                .filter(employee -> !exceptDepartment.test(employee.getDepartment()))
+                .count();
     }
     //(ex.5)
     public static Map<String, List<Employee>> groupByJobDepartment(List<Employee> employeeList) {
@@ -170,13 +159,10 @@ public class Employee {
                 .collect(Collectors.groupingBy(Employee::getDepartment));
     }
     //(ex.6)
-    public static void printEmployeesJoinedAfter2020WithSalaryAbove1000(List<Employee> employeeList) {
-        Date dateAfter = new Date(120, 0, 1);
-        for (Employee employee : employeeList) {
-            if (employee.getJoinDate().after(dateAfter) && employee.getSalary() > 1000) {
-                System.out.println(employee);
-            }
-        }
+    public static List<Employee> printEmployeesJoinedAfter2020WithSalaryAbove1000(List<Employee> employeeList, Date startDate, int salary) {
+        return employeeList.stream()
+                .filter(employee -> employee.getJoinDate().after(startDate) && employee.getSalary() > salary)
+                .collect(Collectors.toList());
     }
     //(ex.7)
     public static Map<String, Integer> getLast3Employees(List<Employee> employees) {
