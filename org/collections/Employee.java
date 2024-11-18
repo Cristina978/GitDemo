@@ -115,14 +115,14 @@ public class Employee {
         result.forEach((name, age) -> System.out.println(name + " : " + age));
         System.out.println("-------------------");
         //(ex.8)
-        int sumOfAllEmployees = calculateSumOfAllSalary(employeeList);
+        double sumOfAllEmployees = calculateSumOfAllSalary(employeeList);
         System.out.println("Ex8. Sum of all Salaries: " + sumOfAllEmployees);
         System.out.println("-------------------");
         //(ex.9)
-        Map<String, List<String>> salariesPerDepartment = returnAllSalaryPerDepartment(employeeList);
+        Map<String, List<Integer>> salariesPerDepartment = returnAllSalaryPerDepartment(employeeList);
         System.out.println("Ex9. Display all salaries per Department:");
         salariesPerDepartment.forEach((department, salaries) ->
-        System.out.println("Department: " + department + "," + salaries));
+        System.out.println("Department: " + department + "=" + salaries));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,16 +166,10 @@ public class Employee {
     }
     //(ex.7)
     public static Map<String, Integer> getLast3Employees(List<Employee> employees) {
-        List<Employee> sortedEmployees = employees.stream()
+        Map<String, Integer> employeeMap = employees.stream()
                 .sorted((e1, e2) -> e2.getJoinDate().compareTo(e1.getJoinDate()))
-                .collect(Collectors.toList());
-
-        List<Employee> getLastThree = sortedEmployees.stream().limit(3).collect(Collectors.toList());
-
-        Map<String, Integer> employeeMap = new LinkedHashMap<>();
-        for (Employee emp : getLastThree) {
-            employeeMap.put(emp.getName(), emp.getAge());
-        }
+                .limit(3)
+                .collect(Collectors.toMap(Employee::getName, employee -> employee.getAge()));
         return employeeMap.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue())
@@ -187,24 +181,16 @@ public class Employee {
                 ));
     }
     //(ex.8)
-    public static int calculateSumOfAllSalary(ArrayList<Employee> employeeList) {
-        int sum = 0;
-        for (Employee i : employeeList) {
-            sum += i.getSalary();
-        }
-        return sum;
+    public static double calculateSumOfAllSalary(ArrayList<Employee> employeeList) {
+        return employeeList.stream()
+                .mapToDouble(Employee::getSalary)
+                .sum();
     }
     //(ex.9)
-    public static Map<String, List<String>> returnAllSalaryPerDepartment(ArrayList<Employee> employeeList) {
-        Map<String, List<String>> resultMap = new HashMap<>();
-        for (Employee i : employeeList) {
-            String department = i.getDepartment();
-            String salary = String.valueOf(i.getSalary());
-
-            if (!resultMap.containsKey(department)) {
-                resultMap.put(department, new ArrayList<>());
-            };
-            resultMap.get(department).add(salary);
-        };
-        return resultMap;
+    public static Map<String, List<Integer>> returnAllSalaryPerDepartment(ArrayList<Employee> employeeList) {
+        return employeeList.stream()
+                .collect(Collectors.groupingBy(
+                        Employee::getDepartment,
+                        Collectors.mapping(Employee::getSalary, Collectors.toList())
+                ));
     }}
