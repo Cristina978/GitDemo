@@ -193,4 +193,5 @@ public class Employee {
                         Employee::getDepartment,
                         Collectors.mapping(Employee::getSalary, Collectors.toList())
                 ));
+
     }}
