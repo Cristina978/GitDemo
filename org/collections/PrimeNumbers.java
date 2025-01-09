@@ -1,6 +1,7 @@
 package org.collections;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class PrimeNumbers {
     public static void main(String[] args) {
@@ -17,8 +18,9 @@ public class PrimeNumbers {
         }
 
         System.out.println("Prime numbers less than " + n + ":");
-        for (int prime : primes) {
-            System.out.print(prime + " ");
+        Iterator<Integer> primeIterator = primes.iterator();
+        while (primeIterator.hasNext()) {
+            System.out.print(primeIterator.next() + " ");
         }
         System.out.println();
 
